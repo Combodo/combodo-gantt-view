@@ -1,10 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
- Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	// Dictionary entries go here
 	'GanttDashlet/Label' => '甘特图',
 	'GanttDashlet/Description' => '以甘特图显示对象',
@@ -35,4 +36,4 @@
 	'GanttDashlet/UI:MoveSplitBarCenter' => '分隔条居中',
 
 	'GanttDashlet/Error:ParametersMissing' => '缺少参数, 请检查配置.',
-));
+]);

@@ -1,16 +1,15 @@
 <?php
+
 /**
  *  @copyright   Copyright (C) 2010-2024 Combodo SAS
  *  @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
-
 class GanttViewController extends AbstractGanttViewController
 {
 	public function OperationGanttViewer()
 	{
-		$aParams = array();
+		$aParams = [];
 
 		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().'/js/utils.js');
 		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().'/js/jquery.tablesorter.js');
@@ -37,9 +36,8 @@ class GanttViewController extends AbstractGanttViewController
 	 */
 	private function PrepareLogViewerData($sLogFileBrowserImpl)
 	{
-		$oLogFileBrowser = new $sLogFileBrowserImpl;
-		if (!($oLogFileBrowser instanceof AbstractLogFileBrowser))
-		{
+		$oLogFileBrowser = new $sLogFileBrowserImpl();
+		if (!($oLogFileBrowser instanceof AbstractLogFileBrowser)) {
 			throw new CoreUnexpectedValue('Invalid parameter : logFileBrowserImpl');
 		}
 
@@ -47,11 +45,11 @@ class GanttViewController extends AbstractGanttViewController
 		$aLogFilesObjects = $sLogFileBrowserImpl::GetLogFilesList();
 		$aLogFilesArray = $this->TransformFilesList($aLogFilesObjects);
 
-		$aParams = array(
+		$aParams = [
 			'logFileBrowserImpl' => $sLogFileBrowserImpl,
 			'filesList' => $aLogFilesArray,
 			'aceMode' => $sLogFileBrowserImpl::GetAceMode(),
-		);
+		];
 
 		$bTemplateName = 'GanttViewerTab';
 		$this->RenderLogViewerTab($aParams, $bTemplateName);
@@ -64,29 +62,30 @@ class GanttViewController extends AbstractGanttViewController
 	 */
 	private function TransformFilesList($aFilesObjects)
 	{
-		uasort($aFilesObjects,
-			static function($oA, $oB) {
+		uasort(
+			$aFilesObjects,
+			static function ($oA, $oB) {
 				/** @var SplFileInfo $oA */
 				/** @var SplFileInfo $oB */
 				return $oA->getMTime() <= $oB->getMTime(); // MTime = modification date
-			});
+			}
+		);
 
-		$aFilesArray = array();
+		$aFilesArray = [];
 		/**
 		 * @var string $sFileName
 		 * @var \SplFileInfo $oFileInfo
 		 */
-		foreach ($aFilesObjects as $sFileName => $oFileInfo)
-		{
+		foreach ($aFilesObjects as $sFileName => $oFileInfo) {
 			$sFileCreationDate = $this->ConvertTimestampToString($oFileInfo->getCTime());
 			$sFileModificationDate = $this->ConvertTimestampToString($oFileInfo->getMTime());
 			$sFileSize = SetupUtils::HumanReadableSize($oFileInfo->getSize());
-			$aFileMetadataArray = array(
+			$aFileMetadataArray = [
 				'name' => $oFileInfo->getFilename(),
 				'ctime' => $sFileCreationDate,
 				'mtime' => $sFileModificationDate,
 				'size' => $sFileSize,
-			);
+			];
 
 			$aFilesArray[$sFileName] = $aFileMetadataArray;
 		}

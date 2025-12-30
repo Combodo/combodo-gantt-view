@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -47,8 +48,7 @@ class GanttParentFields
 		$this->sParent = $aScope['parent'];
 		$this->sClass = $aScope['class'];
 		$this->sStatus = $aScope['status'];
-		if ($aScope['parent'] != null && $aScope['parent'] != '')
-		{
+		if ($aScope['parent'] != null && $aScope['parent'] != '') {
 			$this->aParentFields = new GanttParentFields($aScope['parent_fields']);
 		}
 	}

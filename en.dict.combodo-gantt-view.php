@@ -1,10 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	// Dictionary entries go here
 	'GanttDashlet/Label' => 'Gantt',
 	'GanttDashlet/Description' => 'See objects as a Gantt',
@@ -35,4 +36,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'GanttDashlet/UI:MoveSplitBarCenter' => 'Center Split Bar',
 
 	'GanttDashlet/Error:ParametersMissing' => 'Missing some parameters, please check the configuration.',
-));
+]);

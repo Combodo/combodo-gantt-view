@@ -1,10 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS, 2022 ITOMIG GmbH
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	// Dictionary entries go here
 	'GanttDashlet/Label' => 'Gantt',
 	'GanttDashlet/Description' => 'Objekte als Gantt-Chart anzeigen',
@@ -35,4 +36,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'GanttDashlet/UI:MoveSplitBarCenter' => 'Trennbalken zentrieren',
 
 	'GanttDashlet/Error:ParametersMissing' => 'Es fehlen Parameter, bitte die Konfiguration überprüfen',
-));
+]);

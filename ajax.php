@@ -1,16 +1,14 @@
 <?php
+
 /**
  *  @copyright   Copyright (C) 2010-2019 Combodo SARL
  *  @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 // Load current environment
-if (file_exists(__DIR__.'/../../approot.inc.php'))
-{
+if (file_exists(__DIR__.'/../../approot.inc.php')) {
 	require_once __DIR__.'/../../approot.inc.php';   // When in env-xxxx folder
-}
-else
-{
+} else {
 	require_once __DIR__.'/../../../approot.inc.php';   // When in datamodels/x.x folder
 }
 

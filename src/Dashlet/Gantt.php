@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -12,11 +13,11 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
  */
 class Gantt
 {
-	const MODULE_CODE = 'combodo-gantt-view';
-	const DEFAULT_TITLE = '';
-	const MODULE_SETTING_CLASSES = 'classes';
-	const MODULE_SETTING_DEFAULT_COLORS = 'default_colors';
-	const MODULE_SETTING_COLORED_FIELD = 'colored_field';// most of the time the status with life cycle
+	public const MODULE_CODE = 'combodo-gantt-view';
+	public const DEFAULT_TITLE = '';
+	public const MODULE_SETTING_CLASSES = 'classes';
+	public const MODULE_SETTING_DEFAULT_COLORS = 'default_colors';
+	public const MODULE_SETTING_COLORED_FIELD = 'colored_field';// most of the time the status with life cycle
 
 	protected $sTitle;
 	protected $aExtraParams;
@@ -49,7 +50,7 @@ class Gantt
 		$this->sTitle = $aScope['title'];
 		$this->bEditMode = $bEditMode;
 		$this->sOql = $aScope['oql'];
-		$this->aExtraParams = (array_key_exists('extra_params', $aScope)) ? $aScope['extra_params'] : array();
+		$this->aExtraParams = (array_key_exists('extra_params', $aScope)) ? $aScope['extra_params'] : [];
 		$this->sDependsOn = $aScope['depends_on'];
 		$this->sTargetDependsOn = $aScope['target_depends_on'];
 		$this->sLabel = $aScope['label'];
@@ -59,8 +60,7 @@ class Gantt
 		$this->sAdditionalInformation1 = $aScope['additional_info1'];
 		$this->sAdditionalInformation2 = $aScope['additional_info2'];
 		$this->sParent = $aScope['parent'];
-		if ($this->sParent != '')
-		{
+		if ($this->sParent != '') {
 			$this->aParentFields = new GanttParentFields($aScope['parent_fields']);
 		}
 		$this->sStatus = $aScope['status'];
@@ -70,27 +70,22 @@ class Gantt
 
 	public function GetGanttValues()
 	{
-		$aDescription = array();
+		$aDescription = [];
 		//table for associate an id with a line number
-		$aLinkedTable = array();
+		$aLinkedTable = [];
 
-		if (isset($this->aExtraParams['query_params']))
-		{
+		if (isset($this->aExtraParams['query_params'])) {
 			$aQueryParams = $this->aExtraParams['query_params'];
-		}
-		elseif (isset($this->aExtraParams['this->class']) && isset($this->aExtraParams['this->id']))
-		{
+		} elseif (isset($this->aExtraParams['this->class']) && isset($this->aExtraParams['this->id'])) {
 			$oObj = MetaModel::GetObject($this->aExtraParams['this->class'], $this->aExtraParams['this->id']);
 			$aQueryParams = $oObj->ToArgsForQuery();
-		}
-		else
-		{
-			$aQueryParams = array();
+		} else {
+			$aQueryParams = [];
 		}
 
 		$oQuery = DBSearch::FromOQL($this->sOql, $aQueryParams);
 
-		$aFields = array($this->sLabel, $this->sStartDate, $this->sEndDate);
+		$aFields = [$this->sLabel, $this->sStartDate, $this->sEndDate];
 		if ($this->sDependsOn != null && $this->sDependsOn != '') {
 			array_push($aFields, $this->sDependsOn);
 		}
@@ -112,16 +107,15 @@ class Gantt
 		$oResultSql = new DBObjectSet($oQuery);
 		$oResultSql->OptimizeColumnLoad([$oQuery->GetClassAlias() => $aFields]);
 		$sClass = $oResultSql->GetClass();
-		$aOrderBy = array();
-		if ($this->sParent != '')
-		{
+		$aOrderBy = [];
+		if ($this->sParent != '') {
 			$aOrderBy[$sClass.'.'.$this->sParent] = true;
 		}
 		$aOrderBy[$sClass.'.'.$this->sStartDate] = true;
 		$oResultSql->SetOrderBy($aOrderBy);
 		$i = 0;
-		$aLevelParent1 = array();
-		$aLevelParent2 = array();
+		$aLevelParent1 = [];
+		$aLevelParent2 = [];
 		while ($oRow = $oResultSql->Fetch()) {
 			$Level = 0;
 			$canWrite = $this->bSaveAllowed;
@@ -138,26 +132,34 @@ class Gantt
 								$canWrite = false;
 							}
 						}
-						if ($aFieldsParent1->sParent != '' && $oObj->Get($aFieldsParent1->sParent) != '' && !array_key_exists($oObj->Get($aFieldsParent1->sParent),
-								$aLevelParent2)) {
+						if ($aFieldsParent1->sParent != '' && $oObj->Get($aFieldsParent1->sParent) != '' && !array_key_exists(
+							$oObj->Get($aFieldsParent1->sParent),
+							$aLevelParent2
+						)) {
 							$aFieldsParent2 = $aFieldsParent1->aParentFields;
-							$oObjParent = MetaModel::GetObject($aFieldsParent2->sClass, $oRow->Get($aFieldsParent1->sParent),
-								false /* MustBeFound */);
-							if ($oObjParent != null)
-							{
+							$oObjParent = MetaModel::GetObject(
+								$aFieldsParent2->sClass,
+								$oRow->Get($aFieldsParent1->sParent),
+								false /* MustBeFound */
+							);
+							if ($oObjParent != null) {
 								$canWriteParent = $this->bSaveAllowed;
-								if ($canWriteParent)
-								{
+								if ($canWriteParent) {
 									$iFlags = $oObjParent->GetAttributeFlags($aFieldsParent2->sStartDate);
 									if (($iFlags & OPT_ATT_READONLY) === OPT_ATT_READONLY
 										|| ($iFlags & OPT_ATT_SLAVE) === OPT_ATT_SLAVE
-										|| ($iFlags & OPT_ATT_HIDDEN) === OPT_ATT_HIDDEN)
-									{
+										|| ($iFlags & OPT_ATT_HIDDEN) === OPT_ATT_HIDDEN) {
 										$canWriteParent = false;
 									}
 								}
-								$aDescription[$i] = $this->createRow($oObjParent, $aFieldsParent2->sClass, $aFieldsParent2, $Level,
-									$canWriteParent, true);
+								$aDescription[$i] = $this->createRow(
+									$oObjParent,
+									$aFieldsParent2->sClass,
+									$aFieldsParent2,
+									$Level,
+									$canWriteParent,
+									true
+								);
 								$i++;
 								$aLevelParent2[$oRow->Get($this->sParent)] = $Level;
 								$Level++;
@@ -168,9 +170,7 @@ class Gantt
 						$aLevelParent1[$oRow->Get($this->sParent)] = $Level;
 						$Level++;
 					}
-				}
-				else
-				{
+				} else {
 					$Level = $aLevelParent1[$oRow->Get($this->sParent)] + 1;
 				}
 			}
@@ -185,7 +185,7 @@ class Gantt
 
 	private function createRow($oRow, $sClass, $aFields, $iLevel, $canWrite = false, $hasChild = false)
 	{
-		$aRow = array();
+		$aRow = [];
 		$aRow['id'] = $sClass.'_'.$oRow->GetKey();
 		$aRow['name'] = htmlspecialchars($oRow->Get($aFields->sLabel), ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5, "UTF-8");
 		if ($aFields->sPercentage != null && $aFields->sPercentage != '') {
@@ -200,50 +200,39 @@ class Gantt
 		$aRow['description'] = "";
 		$aRow['code'] = "";
 		$aRow['level'] = $iLevel;
-		if ($aFields->sStatus != null && $aFields->sStatus != '')
-		{
+		if ($aFields->sStatus != null && $aFields->sStatus != '') {
 			$aRow['status'] = $oRow->Get($aFields->sStatus);
-		}
-		else
-		{
+		} else {
 			$aRow['status'] = "";
 		}
-		if ($hasChild == false && $aFields->sDependsOn != null && $aFields->sDependsOn != '')
-		{
+		if ($hasChild == false && $aFields->sDependsOn != null && $aFields->sDependsOn != '') {
 			if (empty($oRow->Get($aFields->sDependsOn))) {
 				$aRow['dependson'] = [];
 			} else {
 				if ($aFields->sTargetDependsOn == '') {
-					$aRow['dependson'] = ($oRow->Get($aFields->sDependsOn) == 0) ? [] : array($oRow->Get($aFields->sDependsOn) => $oRow->Get($aFields->sDependsOn));
+					$aRow['dependson'] = ($oRow->Get($aFields->sDependsOn) == 0) ? [] : [$oRow->Get($aFields->sDependsOn) => $oRow->Get($aFields->sDependsOn)];
 				} else {
 					$aRow['dependson'] = $oRow->Get($aFields->sDependsOn)->GetColumnAsArray($aFields->sTargetDependsOn);
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$aRow['dependson'] = [];
 		}
 		$aRow['canWrite'] = false;
 		$sFormat = "Y-m-d H:i:s";
-		if (strlen($oRow->Get($aFields->sStartDate)) < 12)
-		{
+		if (strlen($oRow->Get($aFields->sStartDate)) < 12) {
 			$sFormat = "Y-m-d";
 		}
 		$iStart = date_format(date_create_from_format($sFormat, $oRow->Get($aFields->sStartDate)), 'U') * 1000;
 		$aRow['start'] = $iStart;
 		$iEnd = 0;
-		if ($oRow->Get($aFields->sEndDate) != null)
-		{
+		if ($oRow->Get($aFields->sEndDate) != null) {
 			$sFormat = "Y-m-d H:i:s";
-			if (strlen($oRow->Get($aFields->sEndDate)) < 12)
-			{
+			if (strlen($oRow->Get($aFields->sEndDate)) < 12) {
 				$sFormat = "Y-m-d";
 			}
 			$iEnd = date_format(date_create_from_format($sFormat, $oRow->Get($aFields->sEndDate)), 'U') * 1000;
-		}
-		else
-		{
+		} else {
 			//add one year to the start_date
 			$iEnd = (date_format(date_create_from_format($sFormat, $oRow->Get($aFields->sStartDate)), 'U') + 33072000) * 1000;
 		}
@@ -265,22 +254,16 @@ class Gantt
 
 	private function renameLink($aDescription, $aLinkedTable)
 	{
-		foreach ($aDescription as &$aRow)
-		{
-			if (sizeof($aRow['dependson']) > 0)
-			{
-				$newLink = array();
-				foreach ($aRow['dependson'] as $sIdRow)
-				{
-					if (array_key_exists($sIdRow, $aLinkedTable))
-					{
+		foreach ($aDescription as &$aRow) {
+			if (sizeof($aRow['dependson']) > 0) {
+				$newLink = [];
+				foreach ($aRow['dependson'] as $sIdRow) {
+					if (array_key_exists($sIdRow, $aLinkedTable)) {
 						array_push($newLink, $aLinkedTable[$sIdRow] + 1);
 					}
 				}
 				$aRow['depends'] = implode(",", $newLink);
-			}
-			else
-			{
+			} else {
 				$aRow['depends'] = "";
 			}
 		}
@@ -297,54 +280,46 @@ class Gantt
 		$oAttLabelEndDate = MetaModel::GetAttributeDef($sClass, $this->sEndDate);
 		$oAttAdditionalInformation1Def = null;
 		$oAttAdditionalInformation2Def = null;
-		if ($this->sAdditionalInformation1 != '')
-		{
+		if ($this->sAdditionalInformation1 != '') {
 			$oAttAdditionalInformation1Def = MetaModel::GetAttributeDef($sClass, $this->sAdditionalInformation1);
 		}
-		if ($this->sAdditionalInformation2 != '')
-		{
+		if ($this->sAdditionalInformation2 != '') {
 			$oAttAdditionalInformation2Def = MetaModel::GetAttributeDef($sClass, $this->sAdditionalInformation2);
 		}
-		$aHandlerOptions = array(
+		$aHandlerOptions = [
 			'attr_label' => $oAttLabelDef->GetLabel(),
 			'attr_start_date' => $oAttLabelStartDate->GetLabel(),
 			'attr_end_date' => $oAttLabelEndDate->GetLabel(),
 			'attr_add_info1' => ($oAttAdditionalInformation1Def != null) ? $oAttAdditionalInformation1Def->GetLabel() : '',
 			'attr_add_info2' => ($oAttAdditionalInformation2Def != null) ? $oAttAdditionalInformation2Def->GetLabel() : '',
-		);
+		];
 
 		return $aHandlerOptions;
 	}
 
 	private function GetListeColorsByStatus()
 	{
-		$sClass=$this->aScope['class'];
-		$aColorsByStatus = array();
+		$sClass = $this->aScope['class'];
+		$aColorsByStatus = [];
 		$aDefaultColors = MetaModel::GetModuleSetting(static::MODULE_CODE, static::MODULE_SETTING_DEFAULT_COLORS);
 		$aClasses = MetaModel::GetModuleSetting(static::MODULE_CODE, static::MODULE_SETTING_CLASSES);
-		while (!isset($aClasses[$sClass]) && !MetaModel::IsRootClass($sClass))
-		{
+		while (!isset($aClasses[$sClass]) && !MetaModel::IsRootClass($sClass)) {
 			$sClass = MetaModel::GetParentClass($sClass);
 		}
-		if (isset($aClasses[$sClass]))
-		{
-			if (isset($aClasses[$sClass][static::MODULE_SETTING_DEFAULT_COLORS]))
-			{
+		if (isset($aClasses[$sClass])) {
+			if (isset($aClasses[$sClass][static::MODULE_SETTING_DEFAULT_COLORS])) {
 				$aDefaultColors = $aClasses[$sClass][static::MODULE_SETTING_DEFAULT_COLORS];
 			}
 			$aColorsByStatus = $aClasses[$sClass]['values'];
 		}
 		$aColorsByStatus[''] = $aDefaultColors;
-		if(isset($this->aParentFields) && isset($this->aParentFields->sClass))
-		{
-			$sClass=$this->aParentFields->sClass;
+		if (isset($this->aParentFields) && isset($this->aParentFields->sClass)) {
+			$sClass = $this->aParentFields->sClass;
 			$aClasses = MetaModel::GetModuleSetting(static::MODULE_CODE, static::MODULE_SETTING_CLASSES);
-			while (!isset($aClasses[$sClass]) && !MetaModel::IsRootClass($sClass))
-			{
+			while (!isset($aClasses[$sClass]) && !MetaModel::IsRootClass($sClass)) {
 				$sClass = MetaModel::GetParentClass($sClass);
 			}
-			if (isset($aClasses[$sClass]))
-			{
+			if (isset($aClasses[$sClass])) {
 				$aColorsByStatus = array_merge($aClasses[$sClass]['values'], $aColorsByStatus);
 			}
 		}
@@ -356,16 +331,13 @@ class Gantt
 	{
 		$sName = '';
 		$aClasses = MetaModel::GetModuleSetting(static::MODULE_CODE, static::MODULE_SETTING_CLASSES);
-		while (!isset($aClasses[$sClass]) && !MetaModel::IsRootClass($sClass))
-		{
+		while (!isset($aClasses[$sClass]) && !MetaModel::IsRootClass($sClass)) {
 			$sClass = MetaModel::GetParentClass($sClass);
 		}
-		if (isset($aClasses[$sClass]) && isset($aClasses[$sClass][static::MODULE_SETTING_COLORED_FIELD]))
-		{
+		if (isset($aClasses[$sClass]) && isset($aClasses[$sClass][static::MODULE_SETTING_COLORED_FIELD])) {
 			$sName = $aClasses[$sClass][static::MODULE_SETTING_COLORED_FIELD];
 		}
-		if ($sName == '')
-		{
+		if ($sName == '') {
 			$sName = MetaModel::GetStateAttributeCode($sClass);
 		}
 
@@ -383,7 +355,7 @@ class Gantt
 	 */
 	public function DisplayDashlet(WebPage $oP, $sId = '')
 	{
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION , 3.0) < 0) {
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, 3.0) < 0) {
 			return $this->DisplayDashletLegacy($oP, $sId);
 		}
 		//render
@@ -393,7 +365,7 @@ class Gantt
 		//analyse of oql in order to resolve variableExpression
 		$aScope = $this->aScope;
 		$aScope["extra_params"] = $this->aExtraParams;
-		$aData = array('sId' => $sId);
+		$aData = ['sId' => $sId];
 		$aData['sTitle'] = $this->sTitle;
 		$aData['bEditMode'] = $this->bEditMode;
 		$aData['sScope'] = json_encode($aScope);
@@ -403,7 +375,7 @@ class Gantt
 		$aData['bPrintable'] = $oP->isPrintableVersion();
 
 		$aData['dateFormat'] = MetaModel::GetConfig()->Get('date_and_time_format')['default']['date'];
-		$aData['dateFormat'] = str_replace(array("y", "Y", "m", "d"), array("yy", "yyyy", "MM", "dd"), $aData['dateFormat']);
+		$aData['dateFormat'] = str_replace(["y", "Y", "m", "d"], ["yy", "yyyy", "MM", "dd"], $aData['dateFormat']);
 		$aData['listeStatus'] = $this->GetListeColorsByStatus();
 
 		$oBlock = UIContentBlockUIBlockFactory::MakeStandard("");
@@ -433,7 +405,7 @@ class Gantt
 		//analyse of oql in order to resolve variableExpression
 		$aScope = $this->aScope;
 		$aScope["extra_params"] = $this->aExtraParams;
-		$aData = array('sId' => $sId);
+		$aData = ['sId' => $sId];
 		$aData['sTitle'] = $this->sTitle;
 		$aData['bEditMode'] = $this->bEditMode;
 		$aData['sScope'] = json_encode($aScope);
@@ -443,7 +415,7 @@ class Gantt
 		$aData['bPrintable'] = $oP->isPrintableVersion();
 
 		$aData['dateFormat'] = MetaModel::GetConfig()->Get('date_and_time_format')['default']['date'];
-		$aData['dateFormat'] = str_replace(array("y", "Y", "m", "d"), array("yy", "yyyy", "MM", "dd"), $aData['dateFormat']);
+		$aData['dateFormat'] = str_replace(["y", "Y", "m", "d"], ["yy", "yyyy", "MM", "dd"], $aData['dateFormat']);
 		$aData['listeStatus'] = $this->GetListeColorsByStatus();
 
 		$oP->add_twig_template(MODULESROOT.'combodo-gantt-view/view_legacy', 'GanttViewerDashlet', $aData);
@@ -460,7 +432,7 @@ class Gantt
 	 */
 	public function Display(WebPage $oP, $sId = '')
 	{
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION , 3.0) < 0) {
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, 3.0) < 0) {
 			return	$this->DisplayLegacy($oP, $sId);
 		}
 		if ($sId == "") {
@@ -503,7 +475,7 @@ class Gantt
 		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttGridEditor.js');
 		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttMaster.js');
 		//render
-		$aData = array('sId' => $sId);
+		$aData = ['sId' => $sId];
 		$aData['sTitle'] = $this->sTitle;
 		$aData['bEditMode'] = $this->bEditMode;
 		$aData['bPrintable'] = $oP->isPrintableVersion();
@@ -574,7 +546,7 @@ class Gantt
 		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttGridEditor.js');
 		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttMaster.js');
 		//render
-		$aData = array('sId' => $sId);
+		$aData = ['sId' => $sId];
 		$aData['sTitle'] = $this->sTitle;
 		$aData['bEditMode'] = $this->bEditMode;
 		$aData['bPrintable'] = $oP->isPrintableVersion();
@@ -621,4 +593,3 @@ class Gantt
 	}
 
 }
-

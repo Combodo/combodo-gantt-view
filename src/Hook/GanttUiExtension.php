@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -14,7 +15,6 @@ if (interface_exists('iPageUIBlockExtension')) {
 	 */
 	class GanttUiBlockExtension implements iPageUIBlockExtension
 	{
-
 		public function GetBannerBlock()
 		{
 			//compile scss file
@@ -32,7 +32,6 @@ if (interface_exists('iPageUIBlockExtension')) {
 		}
 	}
 
-
 } else {
 	/**
 	 * Class GanttUIextension
@@ -42,7 +41,6 @@ if (interface_exists('iPageUIBlockExtension')) {
 	 */
 	class GanttUiExtension implements iPageUIExtension
 	{
-
 		/**
 		 * @inheritdoc
 		 */

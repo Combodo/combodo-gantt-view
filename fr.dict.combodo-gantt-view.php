@@ -1,9 +1,10 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	// Dictionary entries go here
 	'GanttDashlet/Label' => 'Gantt',
 	'GanttDashlet/Description' => 'Voir les objets dans un diagramme de Gantt',
@@ -34,4 +35,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'GanttDashlet/UI:MoveSplitBarCenter' => 'Centrer la séparation',
 
 	'GanttDashlet/Error:ParametersMissing' => 'Il manque des paramètres. Veuillez vérifier le paramétrage. ',
-));
+]);
