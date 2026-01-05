@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="https://www.combodo.com/itop-schema/3.3">
   <meta>
     <dashlets>
       <dashlet id="GanttDashlet" _delta="define">
@@ -9,35 +9,31 @@
         <configuration/>
       </dashlet>
     </dashlets>
-    <property_trees xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:noNamespaceSchemaLocation="https://www.combodo.com/itop-schema/3.3">
-      <property_tree _delta="define" id="GanttDashlet" xsi:type="Combodo-PropertyTree">
+    <property_trees>
+      <property_tree _delta="define" id="GanttDashlet" xsi:type="Combodo-PropertyType">
         <extends>Dashlet</extends>
+        <definition xsi:type="Combodo-ValueType-PropertyTree">
         <nodes>
-          <node id="title">
+          <node id="title" xsi:type="Combodo-ValueType-Label">
             <label>UI:DashletHeaderDynamic:Prop-Title</label>
-            <value-type xsi:type="Combodo-ValueType-Label"/>
           </node>
-          <node id="oql">
+          <node id="oql" xsi:type="Combodo-ValueType-OQL">
             <label>UI:DashletHeaderDynamic:Prop-Query</label>
-            <value-type xsi:type="Combodo-ValueType-OQL">
               <data-transform>
                 <xml-node-empty-not-allowed/>
               </data-transform>
-            </value-type>
           </node>
-          <node id="depends_on">
+          <node id="depends_on" xsi:type="Combodo-ValueType-ClassAttribute">
             <label>GanttDashlet/Prop:DependsOn</label>
-            <value-type xsi:type="Combodo-ValueType-ClassAttribute">
               <data-transform>
                 <xml-node-empty-not-allowed/>
               </data-transform>
               <class>{{oql.selected_class}}</class>
               <category>link</category>
-            </value-type>
           </node>
 
-
         </nodes>
+        </definition>
       </property_tree>
     </property_trees>
   </meta>
