@@ -1,86 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
-	<meta>
-		<dashlets>
-			<dashlet id="GanttDashlet" _delta="define">
-				<label>Gantt View</label>
-				<icon>combodo-gantt-view/asset/img/gantt-dashlet.png</icon>
-				<description>Displays elements inside a gantt</description>
-				<configuration />
-			</dashlet>
-		</dashlets>
-	</meta>
-	<module_parameters>
-		<parameters id="combodo-gantt-view" _delta="define">
-			<default_colors>
-				<backgroundcolor>#159119</backgroundcolor>
-				<color>#fff</color>
-			</default_colors>
-			<classes type="hash">
-				<UserRequest>
-					<default_colors>
-						<backgroundcolor>#159119</backgroundcolor>
-						<color>#fff</color>
-					</default_colors>
-					<name>title</name>
-					<start_date>start_date</start_date>
-					<end_date>close_date</end_date>
-					<completion></completion>
-					<depends_on>parent_request_id</depends_on>
-					<group_by></group_by>
-					<colored_field>status</colored_field>
-					<values type="hash">
-						<new>
-							<backgroundcolor>#1591FF</backgroundcolor>
-							<color>#fff</color>
-						</new>
-						<escalated_tto>
-							<backgroundcolor>#FF9F33</backgroundcolor>
-							<color>#fff</color>
-						</escalated_tto>
-						<escalated_ttr>
-							<backgroundcolor>#FF9F88</backgroundcolor>
-							<color>#fff</color>
-						</escalated_ttr>
-						<assigned>
-							<backgroundcolor>#159119</backgroundcolor>
-							<color>#fff</color>
-						</assigned>
-						<waiting_for_approval>
-							<backgroundcolor>#4499F9</backgroundcolor>
-							<color>#fff</color>
-						</waiting_for_approval>
-						<approved>
-							<backgroundcolor>#159119</backgroundcolor>
-							<color>#fff</color>
-						</approved>
-						<rejected>
-							<backgroundcolor>#FF9F33</backgroundcolor>
-							<color>#fff</color>
-						</rejected>
-						<pending>
-							<backgroundcolor>#FF9F44</backgroundcolor>
-							<color>#fff</color>
-						</pending>
-						<dispatched>
-							<backgroundcolor>#FF9F55</backgroundcolor>
-							<color>#fff</color>
-						</dispatched>
-						<redispatched>
-							<backgroundcolor>#FF9F66</backgroundcolor>
-							<color>#fff</color>
-						</redispatched>
-						<closed>
-							<backgroundcolor>#159180</backgroundcolor>
-							<color>#fff</color>
-						</closed>
-						<resolved>
-							<backgroundcolor>#939325</backgroundcolor>
-							<color>#fff</color>
-						</resolved>
-					</values>
-				</UserRequest>
-			</classes>
-		</parameters>
-	</module_parameters>
+  <meta>
+    <dashlets>
+      <dashlet id="GanttDashlet" _delta="define">
+        <label>Gantt View</label>
+        <icon>combodo-gantt-view/asset/img/gantt-dashlet.png</icon>
+        <description>Displays elements inside a gantt</description>
+        <configuration/>
+      </dashlet>
+    </dashlets>
+    <property_trees xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:noNamespaceSchemaLocation="https://www.combodo.com/itop-schema/3.3">
+      <property_tree _delta="define" id="GanttDashlet" xsi:type="Combodo-PropertyTree">
+        <extends>Dashlet</extends>
+        <nodes>
+          <node id="title">
+            <label>UI:DashletHeaderDynamic:Prop-Title</label>
+            <value-type xsi:type="Combodo-ValueType-Label"/>
+          </node>
+          <node id="oql">
+            <label>UI:DashletHeaderDynamic:Prop-Query</label>
+            <value-type xsi:type="Combodo-ValueType-OQL">
+              <data-transform>
+                <xml-node-empty-not-allowed/>
+              </data-transform>
+            </value-type>
+          </node>
+          <node id="depends_on">
+            <label>GanttDashlet/Prop:DependsOn</label>
+            <value-type xsi:type="Combodo-ValueType-ClassAttribute">
+              <data-transform>
+                <xml-node-empty-not-allowed/>
+              </data-transform>
+              <class>{{oql.selected_class}}</class>
+              <category>link</category>
+            </value-type>
+          </node>
+
+
+        </nodes>
+      </property_tree>
+    </property_trees>
+  </meta>
+  <module_parameters>
+    <parameters id="combodo-gantt-view" _delta="define">
+      <default_colors>
+        <backgroundcolor>#159119</backgroundcolor>
+        <color>#fff</color>
+      </default_colors>
+      <classes type="hash">
+        <UserRequest>
+          <default_colors>
+            <backgroundcolor>#159119</backgroundcolor>
+            <color>#fff</color>
+          </default_colors>
+          <name>title</name>
+          <start_date>start_date</start_date>
+          <end_date>close_date</end_date>
+          <completion></completion>
+          <depends_on>parent_request_id</depends_on>
+          <group_by></group_by>
+          <colored_field>status</colored_field>
+          <values type="hash">
+            <new>
+              <backgroundcolor>#1591FF</backgroundcolor>
+              <color>#fff</color>
+            </new>
+            <escalated_tto>
+              <backgroundcolor>#FF9F33</backgroundcolor>
+              <color>#fff</color>
+            </escalated_tto>
+            <escalated_ttr>
+              <backgroundcolor>#FF9F88</backgroundcolor>
+              <color>#fff</color>
+            </escalated_ttr>
+            <assigned>
+              <backgroundcolor>#159119</backgroundcolor>
+              <color>#fff</color>
+            </assigned>
+            <waiting_for_approval>
+              <backgroundcolor>#4499F9</backgroundcolor>
+              <color>#fff</color>
+            </waiting_for_approval>
+            <approved>
+              <backgroundcolor>#159119</backgroundcolor>
+              <color>#fff</color>
+            </approved>
+            <rejected>
+              <backgroundcolor>#FF9F33</backgroundcolor>
+              <color>#fff</color>
+            </rejected>
+            <pending>
+              <backgroundcolor>#FF9F44</backgroundcolor>
+              <color>#fff</color>
+            </pending>
+            <dispatched>
+              <backgroundcolor>#FF9F55</backgroundcolor>
+              <color>#fff</color>
+            </dispatched>
+            <redispatched>
+              <backgroundcolor>#FF9F66</backgroundcolor>
+              <color>#fff</color>
+            </redispatched>
+            <closed>
+              <backgroundcolor>#159180</backgroundcolor>
+              <color>#fff</color>
+            </closed>
+            <resolved>
+              <backgroundcolor>#939325</backgroundcolor>
+              <color>#fff</color>
+            </resolved>
+          </values>
+        </UserRequest>
+      </classes>
+    </parameters>
+  </module_parameters>
 </itop_design>
