@@ -9,8 +9,8 @@
         <configuration/>
       </dashlet>
     </dashlets>
-    <property_trees>
-      <property_tree _delta="define" id="GanttDashlet" xsi:type="Combodo-PropertyType">
+    <property_types>
+      <property_type _delta="define" id="GanttDashlet" xsi:type="Combodo-PropertyType">
         <extends>Dashlet</extends>
         <definition xsi:type="Combodo-ValueType-PropertyTree">
         <nodes>
@@ -34,8 +34,8 @@
 
         </nodes>
         </definition>
-      </property_tree>
-    </property_trees>
+      </property_type>
+    </property_types>
   </meta>
   <module_parameters>
     <parameters id="combodo-gantt-view" _delta="define">
