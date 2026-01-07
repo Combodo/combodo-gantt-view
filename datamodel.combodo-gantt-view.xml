@@ -19,15 +19,9 @@
           </node>
           <node id="oql" xsi:type="Combodo-ValueType-OQL">
             <label>UI:DashletHeaderDynamic:Prop-Query</label>
-              <data-transform>
-                <xml-node-empty-not-allowed/>
-              </data-transform>
           </node>
           <node id="depends_on" xsi:type="Combodo-ValueType-ClassAttribute">
             <label>GanttDashlet/Prop:DependsOn</label>
-              <data-transform>
-                <xml-node-empty-not-allowed/>
-              </data-transform>
               <class>{{oql.selected_class}}</class>
               <category>link</category>
           </node>
