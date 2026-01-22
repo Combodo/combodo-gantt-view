@@ -4,7 +4,7 @@
     <dashlets>
       <dashlet id="GanttDashlet" _delta="define">
         <label>Gantt View</label>
-        <icon>combodo-gantt-view/asset/img/gantt-dashlet.png</icon>
+        <icon>env-production/combodo-gantt-view/asset/img/gantt-dashlet.png</icon>
         <description>Displays elements inside a gantt</description>
         <configuration/>
       </dashlet>
