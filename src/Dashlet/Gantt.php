@@ -383,9 +383,6 @@ class Gantt
 	 */
 	public function DisplayDashlet(WebPage $oP, $sId = '')
 	{
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION , 3.0) < 0) {
-			return $this->DisplayDashletLegacy($oP, $sId);
-		}
 		//render
 		if ($sId == "") {
 			$sId = "gantt".mt_rand();
@@ -460,48 +457,45 @@ class Gantt
 	 */
 	public function Display(WebPage $oP, $sId = '')
 	{
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION , 3.0) < 0) {
-			return	$this->DisplayLegacy($oP, $sId);
-		}
 		if ($sId == "") {
 			$sId = "gantt".mt_rand();
 		}
 		$aScope = $this->aScope;
 		$aScope["extra_params"] = $this->aExtraParams;
 		//CSS
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/dateField/jquery.dateField.css');
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/platform.css');
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/gantt.css');
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/css/style.css');
+		$oP->LinkStylesheetFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/dateField/jquery.dateField.css');
+		$oP->LinkStylesheetFromModule('combodo-gantt-view/asset/lib/jQueryGantt/platform.css');
+		$oP->LinkStylesheetFromModule('combodo-gantt-view/asset/lib/jQueryGantt/gantt.css');
+		$oP->LinkStylesheetFromModule('combodo-gantt-view/asset/css/style.css');
 
 		if ($oP->isPrintableVersion()) {
-			$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttPrint.css');
-			$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/valueSlider/mb.slider.css');
+			$oP->LinkStylesheetFromModule('combodo-gantt-view/asset/lib/jQueryGantt/ganttPrint.css');
+			$oP->LinkStylesheetFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/valueSlider/mb.slider.css');
 		}
 		//JS
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/jquery.livequery.1.1.1.min.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/jquery.timers.js?v=$sModuleVersion');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/jquery.livequery.1.1.1.min.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/jquery.timers.js?v=$sModuleVersion');
 
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/utilities.js?v=$sModuleVersion');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/forms.js?v=$sModuleVersion');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/date.js?v=$sModuleVersion');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/dialogs.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/layout.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/i18nJs.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/utilities.js?v=$sModuleVersion');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/forms.js?v=$sModuleVersion');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/date.js?v=$sModuleVersion');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/dialogs.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/layout.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/i18nJs.js');
 
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/dateField/jquery.dateField.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/JST/jquery.JST.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/valueSlider/jquery.mb.slider.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/dateField/jquery.dateField.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/JST/jquery.JST.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/valueSlider/jquery.mb.slider.js');
 
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/svg/jquery.svg.min.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/svg/jquery.svgdom.1.8.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/svg/jquery.svg.min.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/svg/jquery.svgdom.1.8.js');
 
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttUtilities.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttTask.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttDrawerSVG.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttZoom.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttGridEditor.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttMaster.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/ganttUtilities.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/ganttTask.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/ganttDrawerSVG.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/ganttZoom.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/ganttGridEditor.js');
+		$oP->LinkScriptFromModule('combodo-gantt-view/asset/lib/jQueryGantt/ganttMaster.js');
 		//render
 		$aData = array('sId' => $sId);
 		$aData['sTitle'] = $this->sTitle;
@@ -521,74 +515,6 @@ class Gantt
 		TwigHelper::RenderIntoBlock($oP, $oBlock, MODULESROOT.'combodo-gantt-view/view', 'GanttViewer', $aData);
 
 		return $oBlock;
-	}
-
-	/**
-	 * Inserts the gantt (as a div) at the current position into the given page
-	 *
-	 * @param \WebPage $oP The page used for the display
-	 * @param string $sId
-	 *
-	 * @throws \Exception
-	 * @throws \OQLException
-	 */
-	public function DisplayLegacy(WebPage $oP, $sId = '')
-	{
-		if ($sId == "") {
-			$sId = "gantt".mt_rand();
-		}
-		$aScope = $this->aScope;
-		$aScope["extra_params"] = $this->aExtraParams;
-		//CSS
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/dateField/jquery.dateField.css');
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/platform.css');
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/gantt.css');
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/css/style.css');
-
-		if ($oP->isPrintableVersion()) {
-			$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttPrint.css');
-			$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/valueSlider/mb.slider.css');
-		}
-		//JS
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/jquery.livequery.1.1.1.min.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/jquery.timers.js?v=$sModuleVersion');
-
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/utilities.js?v=$sModuleVersion');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/forms.js?v=$sModuleVersion');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/date.js?v=$sModuleVersion');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/dialogs.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/layout.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/i18nJs.js');
-
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/dateField/jquery.dateField.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/JST/jquery.JST.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/valueSlider/jquery.mb.slider.js');
-
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/svg/jquery.svg.min.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/libs/jquery/svg/jquery.svgdom.1.8.js');
-
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttUtilities.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttTask.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttDrawerSVG.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttZoom.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttGridEditor.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'combodo-gantt-view/asset/lib/jQueryGantt/ganttMaster.js');
-		//render
-		$aData = array('sId' => $sId);
-		$aData['sTitle'] = $this->sTitle;
-		$aData['bEditMode'] = $this->bEditMode;
-		$aData['bPrintable'] = $oP->isPrintableVersion();
-		//$aData['bSaveAllowed'] = true;
-		$aData['bSaveAllowed'] = $this->isSaveAllowed($this->aScope['class'], $this->bSaveAllowed);
-		$aData['sScope'] = json_encode($aScope);
-		$aData['aDescription'] = $this->GetGanttDescription();
-		$aData['sAbsUrlModulesRoot'] = utils::GetAbsoluteUrlModulesRoot();
-		$aData['sModuleVersion'] = utils::GetCompiledModuleVersion(static::MODULE_CODE);
-		$aData['dateFormat'] = "yy-MM-dd";
-		$aData['listeStatus'] = $this->GetListeColorsByStatus();
-		$aData['aExtraParams'] = $this->aExtraParams;
-
-		TwigHelper::RenderIntoPage($oP, MODULESROOT.'combodo-gantt-view/view_legacy', 'GanttViewer', $aData);
 	}
 
 	private function isSaveAllowed($sClass, $bSaveAllowed)
